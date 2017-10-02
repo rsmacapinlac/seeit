@@ -4,7 +4,8 @@ require 'webshot/screenshot'
 
 module Seeit
   class Screenshot
-    def initialize(url, name, path = nil)
+    def initialize(url, name, path = nil, width = 1024)
+      @width = 4096
 
       # if path is nil, then default to current
       _path = path
@@ -19,8 +20,9 @@ module Seeit
     end
 
     def snap
+      Webshot.width = @width
       ws = Webshot::Screenshot.instance
-      ws.capture(@_url, "#{@_path}/#{@_name}.png", width: 4096) do |magick|
+      ws.capture(@_url, "#{@_path}/#{@_name}.png") do |magick|
         magick.combine_options do |c|
         end
       end

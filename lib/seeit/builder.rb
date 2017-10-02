@@ -21,12 +21,29 @@ module Seeit
 
     def build
       create_build_version_directory
-      pages = @site_config['structure']
+      pages   = @site_config['structure']
+      widths  = @site_config['widths']
+      widths   = [] if @site_config['widths'].nil?
       for page in pages
-        page.each { |key, value|
-          a = Seeit::Screenshot.new value, key, build_version_directory
-          a.snap
-        }
+        if widths.empty?
+          page.each { |key, value|
+            a = Seeit::Screenshot.new value, key, build_version_directory
+            a.snap
+          }
+        else
+          for width in widths
+            width_name  = ''
+            width_value = ''
+            width.each { |key, value|
+              width_name = key
+              width_value = value
+            }
+            page.each { |key, value|
+              a = Seeit::Screenshot.new value, "#{key} - #{width_name}", build_version_directory, width_value
+              a.snap
+            }
+          end
+        end
       end
     end
 

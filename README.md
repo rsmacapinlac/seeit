@@ -12,6 +12,10 @@ directory should contain a settings.json file.
 ```
 {
   "name":"Macapinlac.com",
+  "widths": [
+    { "large": 2048 },
+    { "medium": 1024 }
+  ],
   "structure": [
     { "home": "http://macapinlac.com" },
     { "now": "http://macapinlac.com/now" },
