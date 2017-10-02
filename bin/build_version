@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require 'seeit'
+require "json"
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: build_version"
+
+  opts.on("-pPROJECT_DIR", "--project-dir=PROJECT_DIR", "Project directory with settings.json") do |project_dir|
+    options[:project_dir] = project_dir
+  end
+  opts.on("-bVERSION_NAME", "--build-version=VERSION_NAME", "Mark the version of your screenshots (defaults to today's date)") do |build_version|
+    options[:build_version] = build_version
+  end
+  opts.on("-h", "--help", "Prints this help") do
+    puts opts
+    exit
+  end
+
+end.parse!
+
+# raise required items
+raise OptionParser::MissingArgument if options[:project_dir].nil?
+
+build_version = options[:build_version]
+build_version = Date.today.strftime("%Y-%m-%d") if options[:build_version].nil?
+
+# read and parse config file
+file        = File.read "#{options[:project_dir]}/settings.json"
+site_config = JSON.parse(file)
+
+b = Seeit::Builder.new(site_config, options[:build_version])
+b.build
