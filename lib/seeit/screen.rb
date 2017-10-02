@@ -5,7 +5,7 @@ require 'webshot/screenshot'
 module Seeit
   class Screenshot
     def initialize(url, name, path = nil, width = 1024)
-      @width = 4096
+      @width = 1024
 
       # if path is nil, then default to current
       _path = path
