@@ -11,6 +11,7 @@ module Seeit
   class Builder
     def initialize(project_folder, build_version_marker = nil)
       @project_folder = File.expand_path project_folder
+      @screenshot = Seeit::Screenshot.new(project_folder)
 
       @site_configuration_file  = "#{@project_folder}/settings.json"
       read_settings(@site_configuration_file)
@@ -23,25 +24,24 @@ module Seeit
       create_build_version_directory
       pages   = @site_config['structure']
       widths  = @site_config['widths']
-      widths   = [] if @site_config['widths'].nil?
+      widths  = [] if @site_config['widths'].nil?
+
       for page in pages
+        page_name = page.keys[0]
+        page_url  = page[page_name]
+
+        @screenshot.open_url page_url
+
         if widths.empty?
-          page.each { |key, value|
-            a = Seeit::Screenshot.new value, key, build_version_directory
-            a.snap
-          }
+          file_path = File.join @build_version_marker, page_name
+          @screenshot.snap file_path
         else
           for width in widths
-            width_name  = ''
-            width_value = ''
-            width.each { |key, value|
-              width_name = key
-              width_value = value
-            }
-            page.each { |key, value|
-              a = Seeit::Screenshot.new value, "#{key} - #{width_name}", build_version_directory, width_value
-              a.snap
-            }
+            profile_name = width.keys[0]
+            profile_size = width[profile_name]
+            @screenshot.resize_width profile_size
+            file_path = File.join @build_version_marker, "#{page_name} - #{profile_name}"
+            @screenshot.snap file_path
           end
         end
       end
