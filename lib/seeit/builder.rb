@@ -50,7 +50,7 @@ module Seeit
     private
 
     def build_version_directory
-      "#{@project_folder}/#{@build_version_marker}"
+      File.join @project_folder, @build_version_marker
     end
 
     def read_settings(config_file)
