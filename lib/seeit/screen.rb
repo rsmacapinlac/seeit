@@ -13,6 +13,7 @@ module Seeit
       Capybara.run_server = false
       Capybara.register_driver :poltergeist do |app|
         Capybara::Poltergeist::Driver.new(app, {
+          timeout: 180,
           # Raise JavaScript errors to Ruby
           js_errors: false,
           # Additional command line options for PhantomJS
